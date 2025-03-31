@@ -1,30 +1,54 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { ReactNode } from "react";
-import { User } from "firebase/auth";
-import { auth, getAuth } from "../firebase";
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import {
+  User,
   onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { setDoc, doc } from "firebase/firestore";
 import AuthContextType from "../types/authContextType";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<User | null>(null);
 
-  function signUp(email: string, password: string) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signUp(email: string, password: string) {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const newUser = userCredential.user;
+    setUser(newUser);
+
+    await setDoc(doc(db, "users", email), {
+      savedShows: [],
+    });
   }
 
-  function logIn(email: string, password: string) {
-    return signInWithEmailAndPassword(auth, email, password);
+  async function logIn(email: string, password: string): Promise<User> {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const loggedInUser = userCredential.user;
+    setUser(loggedInUser);
+    return loggedInUser;
   }
 
-  function logOut() {
-    return signOut(auth);
+  async function logOut() {
+    await signOut(auth);
+    setUser(null);
   }
 
   useEffect(() => {
@@ -32,10 +56,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       setUser(currentUser);
     });
 
-    return () => {
-      unsubscribe();
-    };
-  });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ signUp, logIn, logOut, user }}>
