@@ -3,11 +3,13 @@ import requests from "../Requests";
 import { useEffect } from "react";
 import { Movie } from "../types/movie";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Main() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const movie: Movie = movies[Math.floor(Math.random() * movies.length)];
-
+  console.log(movie);
+  const navigate = useNavigate();
   useEffect(() => {
     axios.get(requests.requestPopular).then((res) => {
       setMovies(res.data.results);
@@ -21,6 +23,11 @@ export default function Main() {
       return str;
     }
   };
+
+  function loadPlayer(id: number) {
+    navigate(`/player/${id}`);
+  }
+
   return (
     <div className="w-full h-[550px] text-white relative ">
       <div className="w-full h-full ">
@@ -34,10 +41,13 @@ export default function Main() {
         <div className="absolute w-full top-[20%] p-4 md:p-8">
           <h1 className="text-3xl md:5xl font-bold ">{movie?.title}</h1>
           <div className="my-4">
-            <button className="border bg-gray-200 text-black border-gray-300 py-2 px-5">
+            <button
+              onClick={() => loadPlayer(movie.id)}
+              className="border bg-gray-200 hover:bg-gray-300  text-black border-gray-300 py-2 px-5 cursor-pointer"
+            >
               Play
             </button>
-            <button className="border text-white border-gray-300 py-2 px-5 ml-4">
+            <button className="border text-white border-gray-300 cursor-pointer py-2 px-5 ml-4">
               Watch Later
             </button>
           </div>

@@ -41,7 +41,7 @@ export default function Row({ title, fetchUrl, rowId }: RowProps) {
           className="w-full h-full overflow-scroll whitespace-nowrap scroll-smooth scrollbar-hide"
         >
           {movies.map((item, id) => (
-            <MovieCard key={id} item={item}></MovieCard>
+            <MovieCard id={item.id} key={id} item={item}></MovieCard>
           ))}
         </div>
         <MdChevronRight

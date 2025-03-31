@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Account from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Player from "./pages/Player";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/player/:id" element={<Player />} />
         </Routes>
       </AuthContextProvider>
     </>

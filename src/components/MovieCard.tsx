@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaPlay } from "react-icons/fa";
 import { Movie } from "../types/movie";
 import { UserAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
-export default function MovieCard({ item }: { item: Movie }) {
+export default function MovieCard({ item, id }: { item: Movie; id: number }) {
   const [like, setLike] = useState<boolean>(false);
   const [saved, setSaved] = useState(false);
   const { user } = UserAuth();
-
+  const navigate = useNavigate();
+  console.log(saved);
   const movieID = doc(db, "users", `${user?.email}`);
+
   const saveShow = async () => {
     if (user?.email) {
       setLike(!like);
@@ -23,26 +26,36 @@ export default function MovieCard({ item }: { item: Movie }) {
         }),
       });
     } else {
-      alert("Pleases log in to save a movie ");
+      alert("Please log in to save a movie");
     }
   };
 
+  function loadPlayer(id: number) {
+    navigate(`/player/${id}`);
+  }
+
   return (
-    <div className="w-[160px sm:w-[200px] md:w-[240px] lg:w-[280px] inline-block cursor-pointer relative p-2">
+    <div className="w-[160px] sm:w-[200px] md:w-[240px] lg:w-[280px] inline-block relative p-2">
       <img
         className="w-full h-auto block"
         src={`https://image.tmdb.org/t/p/original/${item?.backdrop_path}`}
         alt={item?.title}
       />
-      <div className="absolute top-0 left-0 w-full h-full hover:bg-black/80 opacity-0 hover:opacity-100 text-white">
-        <p className="white-space-normal text-xs md:text-sm font-bold flex justify-center items-center h-full text-center">
+      <div className="absolute top-0 left-0 w-full h-full hover:bg-black/80 opacity-0 hover:opacity-100 text-white flex flex-col justify-center items-center">
+        <p className="text-xs md:text-sm font-bold text-center mb-2">
           {item.title}
         </p>
-        <p onClick={saveShow}>
+        <button
+          onClick={() => loadPlayer(id)}
+          className="p-2 text-white flex items-center justify-center hover:text-gray-300 transition"
+        >
+          <FaPlay className="cursor-pointer" size={30} />
+        </button>
+        <p onClick={saveShow} className="absolute cursor-pointer top-4 left-4">
           {like ? (
-            <FaHeart className="absolute top-4 left-4 text-gray-300" />
+            <FaHeart className="text-gray-300" />
           ) : (
-            <FaRegHeart className="absolute top-4 left-4 text-gray-300" />
+            <FaRegHeart className="text-gray-300" />
           )}
         </p>
       </div>
