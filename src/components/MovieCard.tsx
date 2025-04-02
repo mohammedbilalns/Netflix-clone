@@ -7,17 +7,14 @@ import { db } from "../firebase";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 export default function MovieCard({ item, id }: { item: Movie; id: number }) {
-  const [like, setLike] = useState<boolean>(false);
-  const [saved, setSaved] = useState(false);
+  const [like, setLike] = useState<boolean>(false); // track the movie is saved
   const { user } = UserAuth();
   const navigate = useNavigate();
-  console.log(saved);
-  const movieID = doc(db, "users", `${user?.email}`);
+  const movieID = doc(db, "users", `${user?.email}`); // reference of the document
 
   const saveShow = async () => {
     if (user?.email) {
       setLike(!like);
-      setSaved(true);
       await updateDoc(movieID, {
         savedShows: arrayUnion({
           id: item.id,
@@ -55,6 +52,7 @@ export default function MovieCard({ item, id }: { item: Movie; id: number }) {
           {like ? (
             <FaHeart className="text-gray-300" />
           ) : (
+            
             <FaRegHeart className="text-gray-300" />
           )}
         </p>

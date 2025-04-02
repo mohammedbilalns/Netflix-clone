@@ -13,7 +13,7 @@ export default function Login() {
     setError("");
     try {
       await logIn(email, password);
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
@@ -72,7 +72,7 @@ export default function Login() {
                 </div>
                 <p className="py-8 ">
                   <span className="text-gray-600">New to Netflix</span>{" "}
-                  <Link to="/signup">Sign Up</Link>
+                  <Link to="/signup" replace>Sign Up</Link>
                 </p>
               </form>
             </div>

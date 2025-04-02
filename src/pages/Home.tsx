@@ -10,7 +10,7 @@ export default function Home() {
       <Row rowId="2" title="Popular" fetchUrl={requests.requestPopular}></Row>
       <Row rowId="3" title="Trending" fetchUrl={requests.requestTrending}></Row>
       <Row rowId="4" title="TopRated" fetchUrl={requests.requestTopRated}></Row>
-      <Row rowId="5" title="Horror" fetchUrl={requests.requestHorror}></Row>
+      {/* <Row rowId="5" title="Horror" fetchUrl={requests.requestHorror}></Row> */}
       <Footer></Footer>
     </>
   );

@@ -8,14 +8,14 @@ import { useNavigate } from "react-router-dom";
 export default function Main() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const movie: Movie = movies[Math.floor(Math.random() * movies.length)];
-  console.log(movie);
   const navigate = useNavigate();
+
   useEffect(() => {
     axios.get(requests.requestPopular).then((res) => {
       setMovies(res.data.results);
     });
-  }, []);
-  //console.log(movies)
+  }, []); // get movie details when component mounts
+
   const truncateString = (str: string, num: number) => {
     if (str?.length > num) {
       return str.slice(0, num) + "...";
@@ -26,7 +26,7 @@ export default function Main() {
 
   function loadPlayer(id: number) {
     navigate(`/player/${id}`);
-  }
+  } // navigate to the trailer player page
 
   return (
     <div className="w-full h-[550px] text-white relative ">
