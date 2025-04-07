@@ -1,16 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../contexts/AuthContext";
 import { useState } from "react";
+import LoadingSpinner from "../components/LoadingSpinner";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { user, logIn } = UserAuth();
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true)
     try {
       await logIn(email, password);
       navigate("/", { replace: true });
@@ -21,9 +25,15 @@ export default function Login() {
       } else {
         setError("An unknown error occurred");
       }
+    }finally{
+      setLoading(false)
     }
   };
   console.log(user);
+
+  if(loading){
+    return <LoadingSpinner></LoadingSpinner>
+  }
   return (
     <>
       <div className="w-full h-screen relative">

@@ -29,9 +29,9 @@ export default function Main() {
   } // navigate to the trailer player page
 
   return (
-    <div className="w-full h-[550px] text-white relative ">
+    <div className="w-full h-[700px] text-white relative ">
       <div className="w-full h-full ">
-        <div className="absolute w-full h-[550px] bg-gradient-to-r from-black"></div>
+        <div className="absolute w-full h-[700px] bg-gradient-to-r from-black"></div>
         <img
           className="w-full h-full object-cover z-0"
           src={`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`}

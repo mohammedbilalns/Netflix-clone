@@ -1,23 +1,32 @@
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../contexts/AuthContext";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useState } from "react";
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { user, signUp } = UserAuth();
+  const [loading , setLoading] = useState(false)
+  
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    setLoading(true)
     try {
       await signUp(email, password);
       navigate("/");
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false)
     }
   };
   console.log(user);
 
+  if(loading){
+    return <LoadingSpinner></LoadingSpinner>
+  }
   return (
     <>
       <div className="w-full h-screen relative">

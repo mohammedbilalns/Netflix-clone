@@ -2,12 +2,15 @@ import NavBar from "./components/NavBar";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import { AuthContextProvider } from "./contexts/AuthContext";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Account from "./pages/Account";
+import LoadingSpinner from "./components/LoadingSpinner";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
-import Player from "./pages/Player";
+import { lazy, Suspense } from "react";
+
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Account = lazy(() => import("./pages/Account"));
+const Player = lazy(() => import("./pages/Player"));
 
 function App() {
   return (
@@ -20,7 +23,9 @@ function App() {
             path="/login"
             element={
               <PublicRoute>
-                <Login />
+                <Suspense fallback=<LoadingSpinner></LoadingSpinner>>
+                  <Login />
+                </Suspense>
               </PublicRoute>
             }
           ></Route>
@@ -28,7 +33,10 @@ function App() {
             path="/signup"
             element={
               <PublicRoute>
-                <Signup />
+                <Suspense fallback=<LoadingSpinner></LoadingSpinner>>
+            
+                  <Signup />
+                </Suspense>
               </PublicRoute>
             }
           ></Route>
@@ -36,11 +44,14 @@ function App() {
             path="/account"
             element={
               <ProtectedRoute>
+                <Suspense fallback=<LoadingSpinner></LoadingSpinner>>
                 <Account />
+
+                </Suspense>
               </ProtectedRoute>
             }
           ></Route>
-          <Route path="/player/:id" element={<Player />} />
+          <Route path="/player/:id" element={ <Suspense><Player /></Suspense> } />
         </Routes>
       </AuthContextProvider>
     </>
